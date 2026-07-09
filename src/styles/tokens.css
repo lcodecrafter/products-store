@@ -1,0 +1,71 @@
+:root {
+  /* ─── Color ─────────────────────────────────────────────────────────────── */
+  --color-fg: #000000;
+  --color-bg: #ffffff;
+  --color-fg-muted: #79736d; /* brand labels, de-emphasized caps */
+  --color-fg-placeholder: #aaaaaa;
+  --color-danger: #df0000;
+
+  --color-border: #e5e5e5; /* grid dividers, card borders */
+  --color-border-muted: #cccccc; /* storage box / swatch unselected */
+  --color-border-strong: #000000; /* selected states */
+
+  --color-disabled-surface: #f3f2f2;
+  --color-disabled-fg: #c2bfbc;
+
+  /* ─── Typography ─────────────────────────────────────────────────────────── */
+  --font-family: Helvetica, Arial, sans-serif;
+
+  --font-size-h1: 24px; /* product name on detail (uppercase) */
+  --font-size-body: 14px; /* prices, spec values, cart text */
+  --font-size-sm: 13px; /* card product name */
+  --font-size-label: 11px; /* STORAGE, COLOR, BRAND caps labels */
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.4;
+
+  --letter-spacing-caps: 0.05em; /* all uppercase labels */
+
+  /* ─── Border-radius ──────────────────────────────────────────────────────── */
+  --radius: 0px; /* no rounded corners anywhere — enforced by design */
+
+  /* ─── Spacing ────────────────────────────────────────────────────────────── */
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 40px;
+  --space-xxl: 64px;
+
+  /* ─── Component dimensions ───────────────────────────────────────────────── */
+  --header-height: 80px;
+  --header-padding-h: 40px;
+
+  --button-height: 48px;
+
+  /* Storage toggle box — fixed size, not full-width */
+  --storage-box-width: 89px;
+  --storage-box-height: 48px;
+
+  --swatch-size: 20px;
+
+  /* ─── Page margins (applied via layout shell) ────────────────────────────── */
+  --page-margin: var(--space-sm); /* mobile: 16px */
+
+  /* ─── Breakpoints (reference only — use in @media, not as custom props) ─── */
+  /* mobile  : 393px  (1 col,  margin 16px)  */
+  /* tablet  : 834px  (2 cols, margin 40px)  */
+  /* desktop : 1920px (5 cols, margin 100px) */
+}
+
+@media (min-width: 834px) {
+  :root {
+    --page-margin: var(--space-xl); /* tablet: 40px */
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --page-margin: 100px; /* desktop: 100px */
+  }
+}
