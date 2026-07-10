@@ -38,9 +38,6 @@
   --space-xxl: 64px;
 
   /* ─── Component dimensions ───────────────────────────────────────────────── */
-  --header-height: 80px;
-  --header-padding-h: 40px;
-
   --button-height: 48px;
 
   /* Storage toggle box — fixed size, not full-width */

@@ -1,0 +1,16 @@
+.emptyState {
+  display: grid;
+  gap: var(--space-xs);
+  padding: var(--space-xl) 0;
+}
+
+.emptyState h2 {
+  font-size: var(--font-size-body);
+  font-weight: 400;
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.emptyState p {
+  color: var(--color-fg-muted);
+}

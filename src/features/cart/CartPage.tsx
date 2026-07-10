@@ -1,7 +1,7 @@
 export function CartPage() {
   return (
-    <main>
+    <section>
       <h1>Cart</h1>
-    </main>
+    </section>
   )
 }

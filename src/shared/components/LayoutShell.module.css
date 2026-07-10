@@ -1,0 +1,8 @@
+.shell {
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+
+.content {
+  padding: var(--space-xl) var(--page-margin) var(--space-xxl);
+}

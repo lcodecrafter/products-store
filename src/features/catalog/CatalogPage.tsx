@@ -1,7 +1,7 @@
 export function CatalogPage() {
   return (
-    <main>
+    <section>
       <h1>Catalog</h1>
-    </main>
+    </section>
   )
 }
