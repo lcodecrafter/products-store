@@ -164,6 +164,8 @@
   gap: var(--space-sm);
   margin-top: var(--space-sm);
   overflow-x: auto;
+  scrollbar-color: var(--color-fg) var(--color-border);
+  scrollbar-width: thin;
 }
 
 .similarGrid > * {
@@ -171,7 +173,23 @@
   width: 240px;
 }
 
+.similarGrid::-webkit-scrollbar {
+  height: 1px;
+}
+
+.similarGrid::-webkit-scrollbar-track {
+  background: var(--color-border);
+}
+
+.similarGrid::-webkit-scrollbar-thumb {
+  background: var(--color-fg);
+}
+
 @media (min-width: 834px) {
+  .addButton {
+    max-width: 260px;
+  }
+
   .detail {
     grid-template-columns: 1fr 1fr;
     gap: var(--space-xxl);
@@ -183,6 +201,10 @@
 }
 
 @media (min-width: 1920px) {
+  .addButton {
+    max-width: 380px;
+  }
+
   .imageWrapper {
     height: 560px;
   }
