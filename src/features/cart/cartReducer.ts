@@ -25,7 +25,9 @@ export type CartAction =
 
 export const initialCartState: CartState = { items: [] }
 
-function getLineKey(line: Pick<CartLine, 'id' | 'selectedColor' | 'selectedStorage'>): string {
+export function getLineKey(
+  line: Pick<CartLine, 'id' | 'selectedColor' | 'selectedStorage'>,
+): string {
   return `${line.id}::${line.selectedColor ?? ''}::${line.selectedStorage ?? ''}`
 }
 

@@ -1,0 +1,129 @@
+.title {
+  margin-bottom: var(--space-lg);
+  font-size: var(--font-size-h1);
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.image {
+  flex-shrink: 0;
+  width: 96px;
+  height: 128px;
+  object-fit: contain;
+}
+
+.info {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.name {
+  font-size: var(--font-size-sm);
+  color: var(--color-fg);
+}
+
+.specs {
+  margin-top: var(--space-xs);
+  color: var(--color-fg-muted);
+  font-size: var(--font-size-label);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.unitPrice {
+  margin-top: var(--space-xs);
+  color: var(--color-fg);
+  font-size: var(--font-size-body);
+}
+
+.removeButton {
+  align-self: flex-start;
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--color-danger);
+  font: inherit;
+  font-size: var(--font-size-label);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-top: 48px;
+}
+
+.continueButton {
+  height: var(--button-height);
+  padding: 0 var(--space-lg);
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font: inherit;
+  font-size: var(--font-size-body);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.total {
+  font-size: var(--font-size-body);
+}
+
+.payButton {
+  height: var(--button-height);
+  padding: 0 var(--space-xl);
+  border: none;
+  background: var(--color-fg);
+  color: var(--color-bg);
+  font: inherit;
+  font-size: var(--font-size-body);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  cursor: not-allowed;
+}
+
+@media (min-width: 834px) {
+  .row {
+    gap: 40px;
+  }
+
+  .image {
+    width: 128px;
+    height: 168px;
+  }
+}

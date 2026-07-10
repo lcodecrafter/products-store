@@ -60,7 +60,7 @@ describe('App shell and routing', () => {
 
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'Cart' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'CART (0)' })).toBeInTheDocument()
   })
 
   it('keeps the logo linked to the catalog route', async () => {
