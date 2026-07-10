@@ -1,15 +1,26 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { mockFetchJson, restoreApiEnv, stubApiEnv } from './test/mockFetch'
 import App from './App'
 
+beforeEach(() => {
+  stubApiEnv()
+  mockFetchJson(200, [])
+})
+
+afterEach(() => {
+  restoreApiEnv()
+})
+
 describe('App shell and routing', () => {
-  it('renders the catalog route at /', () => {
+  it('renders the catalog route at /', async () => {
     window.history.pushState({}, '', '/')
 
     render(<App />)
 
     expect(screen.getByRole('heading', { name: 'Catalog' })).toBeInTheDocument()
+    expect(await screen.findByText('No products found')).toBeInTheDocument()
   })
 
   it('renders the product detail route with the product id', () => {
@@ -37,9 +48,10 @@ describe('App shell and routing', () => {
     await user.click(screen.getByRole('link', { name: 'Go to catalog' }))
 
     expect(screen.getByRole('heading', { name: 'Catalog' })).toBeInTheDocument()
+    expect(await screen.findByText('No products found')).toBeInTheDocument()
   })
 
-  it('shows the cart link with the current item count', () => {
+  it('shows the cart link with the current item count', async () => {
     window.history.pushState({}, '', '/')
 
     render(<App />)
@@ -48,5 +60,6 @@ describe('App shell and routing', () => {
 
     expect(cartLink).toHaveAttribute('href', '/cart')
     expect(cartLink).toHaveTextContent('0')
+    expect(await screen.findByText('No products found')).toBeInTheDocument()
   })
 })
