@@ -1,64 +1,107 @@
-# MBST / Zara Challenge — Mobile Catalog
+# Products Catalog
 
-Smartphone catalog (list, detail, cart) built with React 19 + TypeScript + Vite.
+A responsive catalog with product detail and a persistent shopping cart,
+built for a technical challenge.
 
-## Requirements
+## Quick start
 
-- [Node.js](https://nodejs.org/) ≥ 20
-- [pnpm](https://pnpm.io/) ≥ 10 (`npm install -g pnpm`)
+### Requirements
 
-## Setup
+- [Node.js](https://nodejs.org/) 20 or later
+- [pnpm](https://pnpm.io/) 10 or later (`npm install -g pnpm`)
+
+### Run locally
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
+Vite starts the application at `http://localhost:5173`.
+
+## Production build
+
+```bash
+pnpm build
+pnpm preview
+```
+
+`pnpm build` type-checks the project and generates an optimized production bundle in
+`dist/`. `pnpm preview` serves that bundle locally. Vite provides separate development
+and production modes without custom bundler configuration.
+
 ## Scripts
 
-| Command              | Description                        |
-| -------------------- | ---------------------------------- |
-| `pnpm dev`           | Start dev server (localhost:5173)  |
-| `pnpm build`         | Type-check + production build      |
-| `pnpm preview`       | Preview production build locally   |
-| `pnpm lint`          | ESLint (zero warnings)             |
-| `pnpm lint:fix`      | ESLint with auto-fix               |
-| `pnpm format`        | Prettier (write)                   |
-| `pnpm format:check`  | Prettier (check only)              |
-| `pnpm test`          | Run Vitest test suite              |
-| `pnpm test:watch`    | Vitest in watch mode               |
+| Command             | Description                                  |
+| ------------------- | -------------------------------------------- |
+| `pnpm dev`          | Start the development server                 |
+| `pnpm build`        | Type-check and create a production build     |
+| `pnpm preview`      | Serve the production build locally            |
+| `pnpm lint`         | Run ESLint with zero allowed warnings         |
+| `pnpm lint:fix`     | Run ESLint and apply available fixes          |
+| `pnpm format`       | Format files with Prettier                    |
+| `pnpm format:check` | Check formatting without writing files        |
+| `pnpm test`         | Run the Vitest test suite                     |
+| `pnpm test:watch`   | Run Vitest in watch mode                      |
 
 ## Environment
 
-This repository includes a ready-to-use `.env` for reviewer convenience:
+The repository includes a ready-to-use `.env` for reviewer convenience.
 
-```
-VITE_API_BASE_URL=https://prueba-tecnica-api-tienda-moviles.onrender.com
-VITE_API_KEY=87909682e6cd74208f41a6ef39fe4191
+In a production project, only `.env.example` should be committed and real `.env` files should remain
+outside version control.
+
+## Architecture
+
+The application is organized by feature, with one explicit boundary for the external
+API. This keeps the codebase direct to navigate without introducing layers that the
+scope does not need.
+
+```text
+src/
+├── api/                 Typed HTTP client and product resource functions
+├── features/
+│   ├── catalog/         Product grid, search, and product list fetching
+│   ├── detail/          Product selection and detail fetching
+│   └── cart/            Cart context, reducer, and cart page
+├── shared/
+│   ├── components/      Layout and reusable UI primitives
+│   └── hooks/           Reusable UI hooks
+└── styles/              Global reset and CSS design tokens
 ```
 
-The API key is sent as the `x-api-key` header on every request. Because Vite embeds
-`VITE_` values in the client bundle, a normal project should commit only
-`.env.example` and keep real `.env` files out of git. This challenge uses a public
-API key, so the tracked `.env` avoids extra setup for reviewers.
+### Key implementation choices
+
+- **External API boundary**: `src/api/` owns request handling, typed responses, and
+  API errors. Feature code consumes resource functions instead of calling `fetch`
+  directly, which keeps API behavior easy to mock in tests.
+- **State ownership**: the cart is the only global, persistent state, so it uses the
+  Context API. Its `cartReducer` is pure and independently tested. Catalog and detail
+  state stay local to their respective feature hooks.
+- **Routing**: React Router maps the catalog (`/`), product detail (`/product/:id`),
+  and cart (`/cart`) views.
+- **Styling**: CSS Modules keep component styles scoped, while CSS custom properties
+  provide shared color, spacing, and typography tokens.
+- **Testing**: Vitest and Testing Library cover API behavior, reducers, interaction
+  rules, and view-level cart behavior.
+
+## Deliberate trade-offs
+
+The project favors proportionality and readability over dependencies or abstractions
+that do not add value for three views and two API endpoints.
+
+| Decision not taken | Reason |
+| ------------------ | ------ |
+| Redux or Zustand | Context is sufficient for the only global state: the cart. |
+| React Query | Caching, invalidation, and background refetching add little value for two simple fetch flows. Feature hooks with `fetch` and `AbortController` keep the behavior visible. |
+| Next.js and SSR | SSR is optional for the challenge. The main interactions rely on client state, and Vite keeps the architecture smaller and easier to review. |
 
 ## Stack
 
-- **Vite 8** + **React 19** + **TypeScript 6**
-- **React Router v6** for client-side routing
-- **Context API + pure cartReducer** for cart state
-- **CSS Modules + CSS custom properties** for styling
-- **Vitest + Testing Library** for unit/integration tests
-- **ESLint + Prettier + Husky** for code quality (pre-commit hook runs `lint-staged`)
+- Vite 8, React 19, and TypeScript 6
+- React Router v6
+- Context API and a pure `cartReducer`
+- CSS Modules and CSS custom properties
+- Vitest and Testing Library
+- ESLint, Prettier, Husky, and lint-staged
 
-## Project structure
-
-```
-src/
-├── api/          # Typed API client + domain types
-├── features/     # Feature slices (catalog, detail, cart)
-├── shared/       # Layout, Navbar, reusable primitives
-└── styles/       # Global reset + CSS design tokens
-```
-
-See `docs/PLAN.md` for architecture decisions and `docs/TASKS.md` for the task board.
