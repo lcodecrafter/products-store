@@ -1,8 +1,31 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import type { ProductDetail } from './api/products'
 import { mockFetchJson, restoreApiEnv, stubApiEnv } from './test/mockFetch'
 import App from './App'
+
+const sampleDetail: ProductDetail = {
+  id: 'iphone-16',
+  brand: 'Apple',
+  name: 'iPhone 16',
+  description: 'The latest iPhone',
+  basePrice: 1099,
+  rating: 4.5,
+  specs: {
+    screen: '6.1"',
+    resolution: '2556x1179',
+    processor: 'A18',
+    mainCamera: '48MP',
+    selfieCamera: '12MP',
+    battery: '3561mAh',
+    os: 'iOS 18',
+    screenRefreshRate: '60Hz',
+  },
+  colorOptions: [{ name: 'Black', hexCode: '#000000', imageUrl: 'http://img/black.jpg' }],
+  storageOptions: [{ capacity: '128GB', price: 1099 }],
+  similarProducts: [],
+}
 
 beforeEach(() => {
   stubApiEnv()
@@ -23,12 +46,13 @@ describe('App shell and routing', () => {
     expect(await screen.findByText('0 RESULTS')).toBeInTheDocument()
   })
 
-  it('renders the product detail route with the product id', () => {
+  it('renders the product detail route with the fetched product', async () => {
+    mockFetchJson(200, sampleDetail)
     window.history.pushState({}, '', '/product/iphone-16')
 
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'Product detail: iphone-16' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'iPhone 16' })).toBeInTheDocument()
   })
 
   it('renders the cart route', () => {

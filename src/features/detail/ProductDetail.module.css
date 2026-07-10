@@ -1,0 +1,189 @@
+.backButton {
+  margin-bottom: var(--space-lg);
+}
+
+.detail {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+.imageWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 344px;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  color: var(--color-fg-muted);
+  font-size: var(--font-size-label);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.name {
+  font-size: var(--font-size-h1);
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.price {
+  margin-top: 11px;
+}
+
+.sectionLabel {
+  color: var(--color-fg-muted);
+  font-size: var(--font-size-label);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.storageSection {
+  margin-top: var(--space-xl);
+}
+
+.storageSection .sectionLabel {
+  margin-bottom: 22px;
+}
+
+.storageOptions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.storageBox {
+  width: var(--storage-box-width);
+  height: var(--storage-box-height);
+  border: 1px solid var(--color-border-muted);
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font: inherit;
+  font-size: var(--font-size-body);
+  cursor: pointer;
+}
+
+.storageBox[data-selected='true'] {
+  border: 1.5px solid var(--color-border-strong);
+}
+
+.colorSection {
+  margin-top: var(--space-lg);
+}
+
+.swatchRow {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.swatch {
+  width: var(--swatch-size);
+  height: var(--swatch-size);
+  padding: 0;
+  border: 1px solid var(--color-border-muted);
+  cursor: pointer;
+}
+
+.swatch[data-selected='true'] {
+  border: 2px solid var(--color-border-strong);
+}
+
+.colorName {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-sm);
+}
+
+.addButton {
+  margin-top: var(--space-xl);
+  width: 100%;
+  height: var(--button-height);
+  border: none;
+  background: var(--color-fg);
+  color: var(--color-bg);
+  font: inherit;
+  font-size: var(--font-size-body);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.addButton:disabled {
+  background: var(--color-disabled-surface);
+  color: var(--color-disabled-fg);
+  cursor: not-allowed;
+}
+
+.specs,
+.similar {
+  margin-top: var(--space-xxl);
+}
+
+.specsTable {
+  margin-top: var(--space-sm);
+}
+
+.specRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  padding: var(--space-xs) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.specLabel {
+  margin: 0;
+  color: var(--color-fg-muted);
+  font-size: var(--font-size-label);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.specValue {
+  margin: 0;
+  color: var(--color-fg);
+  font-size: var(--font-size-body);
+  text-align: right;
+}
+
+.similarGrid {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  overflow-x: auto;
+}
+
+.similarGrid > * {
+  flex: 0 0 auto;
+  width: 240px;
+}
+
+@media (min-width: 834px) {
+  .detail {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xxl);
+  }
+
+  .imageWrapper {
+    height: 480px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .imageWrapper {
+    height: 560px;
+  }
+}

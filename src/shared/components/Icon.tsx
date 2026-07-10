@@ -1,7 +1,8 @@
+import arrowSrc from '../../assets/icons/arrow.svg'
 import bagSrc from '../../assets/icons/bag.svg'
 import logoSrc from '../../assets/icons/logo.svg'
 
-type IconName = 'logo' | 'bag'
+type IconName = 'logo' | 'bag' | 'back'
 
 type IconProps = {
   name: IconName
@@ -11,6 +12,7 @@ type IconProps = {
 const sources: Record<IconName, string> = {
   logo: logoSrc,
   bag: bagSrc,
+  back: arrowSrc,
 }
 
 export function Icon({ name, className }: IconProps) {
