@@ -1,7 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { mockFetchJson, restoreApiEnv, stubApiEnv } from '../../test/mockFetch'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { mockFetchJson, restoreApiEnv, stubApiEnv, TEST_API_BASE_URL } from '../../test/mockFetch'
 import { CatalogPage } from './CatalogPage'
 
 beforeEach(() => {
@@ -17,12 +18,31 @@ const sampleList = [
   { id: '2', brand: 'Google', name: 'Pixel 9', basePrice: 799, imageUrl: 'http://img/2.jpg' },
 ]
 
+const pixelResults = [sampleList[1]]
+
 function renderCatalogPage() {
   return render(
     <MemoryRouter>
       <CatalogPage />
     </MemoryRouter>,
   )
+}
+
+function mockSearchFetch() {
+  const fetchMock = vi.fn().mockImplementation((url: string) => {
+    const search = new URL(url).searchParams.get('search')
+    const body = search === 'Pixel' ? pixelResults : sampleList
+
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      json: () => Promise.resolve(body),
+    })
+  })
+
+  vi.stubGlobal('fetch', fetchMock)
+  return fetchMock
 }
 
 describe('CatalogPage', () => {
@@ -44,6 +64,30 @@ describe('CatalogPage', () => {
 
     expect(screen.getByText('iPhone 14')).toBeInTheDocument()
     expect(screen.getByText('Pixel 9')).toBeInTheDocument()
+    expect(screen.getByText('2 RESULTS')).toBeInTheDocument()
+  })
+
+  it('keeps the search input controlled and renders debounced filtered results', async () => {
+    const user = userEvent.setup()
+    const fetchMock = mockSearchFetch()
+
+    renderCatalogPage()
+
+    const searchInput = await screen.findByRole('searchbox', { name: 'Search products' })
+    await screen.findByText('iPhone 14')
+
+    await user.type(searchInput, 'Pixel')
+
+    expect(searchInput).toHaveValue('Pixel')
+
+    await waitFor(() => {
+      expect(screen.getByText('1 RESULT')).toBeInTheDocument()
+      expect(screen.queryByText('iPhone 14')).not.toBeInTheDocument()
+    })
+    expect(screen.getByText('Pixel 9')).toBeInTheDocument()
+
+    const requestedUrls = fetchMock.mock.calls.map(([url]) => String(url))
+    expect(requestedUrls).toContain(`${TEST_API_BASE_URL}/products?search=Pixel`)
   })
 
   it('shows an error state when the request fails', async () => {
@@ -57,13 +101,13 @@ describe('CatalogPage', () => {
     expect(screen.queryByRole('link')).not.toBeInTheDocument()
   })
 
-  it('shows an empty state when the request succeeds without products', async () => {
+  it('shows a 0 results state when the request succeeds without products', async () => {
     mockFetchJson(200, [])
 
     renderCatalogPage()
 
-    expect(await screen.findByText('No products found')).toBeInTheDocument()
-    expect(screen.getByText('Try again later.')).toBeInTheDocument()
+    expect(await screen.findByText('0 RESULTS')).toBeInTheDocument()
+    expect(screen.getByText('Try another search.')).toBeInTheDocument()
     expect(screen.queryByRole('link')).not.toBeInTheDocument()
   })
 })

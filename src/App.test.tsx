@@ -19,8 +19,8 @@ describe('App shell and routing', () => {
 
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'Catalog' })).toBeInTheDocument()
-    expect(await screen.findByText('No products found')).toBeInTheDocument()
+    expect(screen.getByRole('searchbox', { name: 'Search products' })).toBeInTheDocument()
+    expect(await screen.findByText('0 RESULTS')).toBeInTheDocument()
   })
 
   it('renders the product detail route with the product id', () => {
@@ -47,8 +47,9 @@ describe('App shell and routing', () => {
 
     await user.click(screen.getByRole('link', { name: 'Go to catalog' }))
 
-    expect(screen.getByRole('heading', { name: 'Catalog' })).toBeInTheDocument()
-    expect(await screen.findByText('No products found')).toBeInTheDocument()
+    expect(window.location.pathname).toBe('/')
+    expect(screen.getByRole('searchbox', { name: 'Search products' })).toBeInTheDocument()
+    expect(await screen.findByText('0 RESULTS')).toBeInTheDocument()
   })
 
   it('shows the cart link with the current item count', async () => {
@@ -60,6 +61,6 @@ describe('App shell and routing', () => {
 
     expect(cartLink).toHaveAttribute('href', '/cart')
     expect(cartLink).toHaveTextContent('0')
-    expect(await screen.findByText('No products found')).toBeInTheDocument()
+    expect(await screen.findByText('0 RESULTS')).toBeInTheDocument()
   })
 })

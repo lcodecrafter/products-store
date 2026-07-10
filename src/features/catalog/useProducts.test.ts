@@ -41,6 +41,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  vi.useRealTimers()
   reactStateTracker.enabled = false
   reactStateTracker.calls = []
   restoreApiEnv()
@@ -80,7 +81,7 @@ describe('useProducts', () => {
     expect(result.current.error).toBeNull()
   })
 
-  it('requests the initial page with a limit of 20', async () => {
+  it('requests the initial page with a limit of 21', async () => {
     mockFetchJson(200, sampleList)
 
     const { result } = renderHook(() => useProducts())
@@ -88,7 +89,103 @@ describe('useProducts', () => {
     await waitFor(() => expect(result.current.isLoading).toBe(false))
 
     const [url] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0] as [string]
-    expect(url).toBe(`${TEST_API_BASE_URL}/products?limit=20`)
+    expect(url).toBe(`${TEST_API_BASE_URL}/products?limit=21`)
+  })
+
+  it('debounces search changes before requesting filtered products', () => {
+    vi.useFakeTimers()
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockImplementation(() => new Promise(() => undefined)),
+    )
+
+    const { rerender } = renderHook(({ search }) => useProducts(search), {
+      initialProps: { search: '' },
+    })
+
+    expect(fetch).toHaveBeenCalledTimes(1)
+
+    rerender({ search: 'pixel' })
+
+    act(() => {
+      vi.advanceTimersByTime(299)
+    })
+
+    expect(fetch).toHaveBeenCalledTimes(1)
+
+    act(() => {
+      vi.advanceTimersByTime(1)
+    })
+
+    expect(fetch).toHaveBeenCalledTimes(2)
+    const [url] = (fetch as ReturnType<typeof vi.fn>).mock.calls[1] as [string]
+    expect(url).toBe(`${TEST_API_BASE_URL}/products?search=pixel`)
+  })
+
+  it('sets loading while a debounced search request is pending', async () => {
+    const fetchMock = vi.fn().mockImplementation((url: string) => {
+      if (url === `${TEST_API_BASE_URL}/products?limit=21`) {
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          statusText: 'OK',
+          json: () => Promise.resolve(sampleList),
+        })
+      }
+
+      return new Promise(() => undefined)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const { result, rerender } = renderHook(({ search }) => useProducts(search), {
+      initialProps: { search: '' },
+    })
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+
+    vi.useFakeTimers()
+    rerender({ search: 'pixel' })
+
+    expect(result.current.isLoading).toBe(false)
+
+    act(() => {
+      vi.advanceTimersByTime(300)
+    })
+
+    expect(result.current.isLoading).toBe(true)
+    expect(result.current.error).toBeNull()
+    const lastCall = fetchMock.mock.calls.at(-1) as [string, RequestInit]
+    expect(lastCall[0]).toBe(`${TEST_API_BASE_URL}/products?search=pixel`)
+    expect(lastCall[1].headers).toEqual({ 'x-api-key': 'test-key' })
+    expect(lastCall[1].signal).toBeInstanceOf(AbortSignal)
+  })
+
+  it('aborts the previous request when the debounced search changes', () => {
+    vi.useFakeTimers()
+    const capturedSignals: AbortSignal[] = []
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockImplementation((_url: string, init?: RequestInit) => {
+        if (init?.signal) capturedSignals.push(init.signal)
+        return new Promise(() => undefined)
+      }),
+    )
+
+    const { rerender } = renderHook(({ search }) => useProducts(search), {
+      initialProps: { search: '' },
+    })
+
+    expect(capturedSignals).toHaveLength(1)
+
+    rerender({ search: 'pixel' })
+
+    act(() => {
+      vi.advanceTimersByTime(300)
+    })
+
+    expect(capturedSignals).toHaveLength(2)
+    expect(capturedSignals[0]?.aborted).toBe(true)
+    expect(capturedSignals[1]?.aborted).toBe(false)
   })
 
   it('exposes an error and stops loading when the request fails with an HTTP error', async () => {
