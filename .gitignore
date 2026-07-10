@@ -5,8 +5,7 @@ node_modules
 dist
 dist-ssr
 
-# Environment files (never commit secrets)
-.env
+# Local environment overrides
 .env.local
 .env.*.local
 

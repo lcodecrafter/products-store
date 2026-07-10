@@ -11,7 +11,6 @@ Smartphone catalog (list, detail, cart) built with React 19 + TypeScript + Vite.
 
 ```bash
 pnpm install
-cp .env.example .env        # add your VITE_API_KEY
 pnpm dev
 ```
 
@@ -31,14 +30,17 @@ pnpm dev
 
 ## Environment
 
-Copy `.env.example` to `.env` and fill in:
+This repository includes a ready-to-use `.env` for reviewer convenience:
 
 ```
-VITE_API_BASE_URL=https://...
-VITE_API_KEY=your-api-key
+VITE_API_BASE_URL=https://prueba-tecnica-api-tienda-moviles.onrender.com
+VITE_API_KEY=87909682e6cd74208f41a6ef39fe4191
 ```
 
-The API key is sent as the `x-api-key` header on every request.
+The API key is sent as the `x-api-key` header on every request. Because Vite embeds
+`VITE_` values in the client bundle, a normal project should commit only
+`.env.example` and keep real `.env` files out of git. This challenge uses a public
+API key, so the tracked `.env` avoids extra setup for reviewers.
 
 ## Stack
 
